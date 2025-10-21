@@ -4,20 +4,20 @@ SQL 기본 문법부터 고급 기능까지 다양한 쿼리 예제를 포함하
 
 ## 목차
 
-1.  [\# 1. 기본 SELECT 구문](#1-기본-select-구문)
-2.  [\# 2. WHERE 절과 조건 연산자](#2-where-절과-조건-연산자)
-3.  [\# 3. SQL 함수](#3-sql-함수)
-4.  [\# 4. 그룹 함수와 GROUP BY](#4-그룹-함수와-group-by)
-5.  [\# 5. 집합 연산자](#5-집합-연산자)
-6.  [\# 6. JOIN](#6-join)
-7.  [\# 7. 서브쿼리 (Subquery)](#7-서브쿼리-subquery)
-8.  [\# 8. DML (데이터 조작어)](#8-dml-데이터-조작어)
-9.  [\# 9. 트랜잭션 (Transaction)](#9-트랜잭션-transaction)
-10. [\# 10. DDL (데이터 정의어)](#10-ddl-데이터-정의어)
-11. [\# 11. 제약 조건 (Constraints)](#11-제약-조건-constraints)
-12. [\# 12. 뷰 (View)](#12-뷰-view)
-13. [\# 13. 시퀀스 (Sequence) 와 인덱스 (Index)](#13-시퀀스-sequence-와-인덱스-index)
-14. [\# 14. 사용자 계정 및 권한](#14-사용자-계정-및-권한)
+1. 기본 SELECT 구문
+2. WHERE 절과 조건 연산자
+3. SQL 함수
+4. 그룹 함수와 GROUP BY
+5. 집합 연산자
+6. JOIN
+7. 서브쿼리 (Subquery)
+8. DML (데이터 조작어)
+9. 트랜잭션 (Transaction)
+10. DDL (데이터 정의어)
+11. 제약 조건 (Constraints)
+12. 뷰 (View)
+13. 시퀀스 (Sequence) 와 인덱스 (Index)
+14. 사용자 계정 및 권한
 
 -----
 
