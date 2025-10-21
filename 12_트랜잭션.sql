@@ -1,0 +1,28 @@
+-- 트랜젝션 (작업의 논리적인 단위)
+-- DML 문에서 트랜잭션을 수행할 수 있음.
+-- DCL, DDL문은 자동으로 COMMIT이 적용됨
+
+--오토커밋의 상태
+SHOW AUTOCOMMIT;
+
+SET AUTOCOMMIT ON; --오토커밋 활성화
+SET AUTOCOMMIT OFF; -- 오토커밋 비활성화
+
+-- SAVEPOINT 트랜잭션의 시점을 기록할 수 있음 (많이 쓰이진 않는다.)
+
+SELECT * FROM DEPTS;
+
+DELETE FROM DEPTS WHERE DEPARTMENT_ID = 10;
+SAVEPOINT DEL10;
+
+DELETE FROM DEPTS WHERE DEPARTMENT_ID = 20;
+SAVEPOINT DEL20;
+
+DELETE FROM DEPTS WHERE DEPARTMENT_ID = 30;
+--
+ROLLBACK TO DEL20; -- 20번 지점으로 롤백
+ROLLBACK TO DEL10; -- 10번 지점으로 롤백
+ROLLBACK; -- 마지막 커밋시점
+SELECT * FROM DEPTS;
+
+COMMIT;

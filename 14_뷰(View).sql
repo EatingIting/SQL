@@ -1,0 +1,119 @@
+-- 뷰란?
+-- 제한적인 자료를 보기위해서 미리 만들어놓은 논리적(가짜) 테이블 이다.
+-- 물리적으로 데이터가 저장되는 형태는 아니고, 원본테이블을 기반으로 한다.
+-- 자주 조회하는 컬럼들을 뷰로 생성해놓으면 관리가 용이해 진다.
+SELECT * FROM USER_SYS_PRIVS;
+
+SELECT * FROM EMP_DETAILS_VIEW;
+
+-- 뷰 생성 (하나의 테이블로 생성된 뷰 - 단순뷰)
+CREATE OR REPLACE VIEW VIEW_EMP AS (
+    SELECT EMPLOYEE_ID AS EMP_ID,
+           FIRST_NAME || ' ' || LAST_NAME AS NAME,
+           JOB_ID,
+           SALARY
+    FROM EMPLOYEES
+    WHERE DEPARTMENT_ID = 60
+);
+
+SELECT * FROM VIEW_EMP;
+
+-- 복합 뷰 - 두개 이상의 테이블을 조인해서 만들어진 뷰
+
+CREATE OR REPLACE VIEW VIEW_EMP_JOB AS (
+    SELECT 
+           E.EMPLOYEE_ID,
+           E.FIRST_NAME || ' ' || E.LAST_NAME NAME,
+           J.JOB_TITLE,
+           D.DEPARTMENT_NAME,
+           L.CITY,
+           L.STREET_ADDRESS
+    FROM EMPLOYEES E
+    JOIN JOBS J
+    ON E.JOB_ID = J.JOB_ID
+    JOIN DEPARTMENTS D
+    ON E.DEPARTMENT_ID = D.DEPARTMENT_ID
+    JOIN LOCATIONS L
+    ON D.LOCATION_ID = L.LOCATION_ID
+);
+
+-- 뷰를 생성하면 데이터의 조회가 용이해진다.
+SELECT * FROM VIEW_EMP_JOB;
+SELECT JOB_TITLE, COUNT(*) CNT
+FROM (SELECT 
+           E.EMPLOYEE_ID,
+           E.FIRST_NAME || ' ' || E.LAST_NAME NAME,
+           J.JOB_TITLE,
+           D.DEPARTMENT_NAME,
+           L.CITY,
+           L.STREET_ADDRESS
+    FROM EMPLOYEES E
+    JOIN JOBS J
+    ON E.JOB_ID = J.JOB_ID
+    JOIN DEPARTMENTS D
+    ON E.DEPARTMENT_ID = D.DEPARTMENT_ID
+    JOIN LOCATIONS L
+    ON D.LOCATION_ID = L.LOCATION_ID
+)
+GROUP BY JOB_TITLE
+ORDER BY CNT DESC;
+
+-- 뷰를 생성하면 데이터의 조회가 용이해진다. - 위와 같은걸 아래로 해결
+SELECT * FROM VIEW_EMP_JOB;
+SELECT JOB_TITLE, COUNT(*) CNT
+FROM VIEW_EMP_JOB
+GROUP BY JOB_TITLE
+ORDER BY CNT DESC;
+
+-- 뷰의 수정(OR REPLACVE)를 붙이면 생성구문과 동일함
+CREATE OR REPLACE VIEW VIEW_EMP_JOB AS (
+    SELECT 
+           E.EMPLOYEE_ID,
+           E.FIRST_NAME || ' ' || E.LAST_NAME NAME,
+           J.JOB_TITLE,
+           D.DEPARTMENT_NAME,
+           L.CITY,
+           L.STREET_ADDRESS
+    FROM EMPLOYEES E
+    JOIN JOBS J
+    ON E.JOB_ID = J.JOB_ID
+    JOIN DEPARTMENTS D
+    ON E.DEPARTMENT_ID = D.DEPARTMENT_ID
+    JOIN LOCATIONS L
+    ON D.LOCATION_ID = L.LOCATION_ID
+    WHERE D.DEPARTMENT_ID = 60
+)
+ORDER BY EMPLOYEE_ID DESC;
+
+SELECT * FROM VIEW_EMP_JOB;
+
+-- 뷰의 삭제
+DROP VIEW VIEW_EMP_JOB;
+
+-- 뷰도 수정이나 삭제, 삽입이 가능함( 대신 많은 제약사항이 따른다.)
+SELECT * FROM VIEW_EMP;
+
+-- NAME은 가상열이기 때문에 INSERT가 불가능
+INSERT INTO VIEW_EMP(EMP_ID, NAME, JOB_ID)
+VALUES (110,'DEMO','IT_PROG');
+-- 원본테이블의 NULL을 허용하지 않는 컬럼이 있어도 불가능 하다.
+INSERT INTO VIEW_EMP(EMP_ID, JOB_ID)
+VALUES(110, 'IT_PROG');
+-- 복합뷰는 당연히 INSERT 불가능
+
+-- 뷰의 옵션
+-- WITH CHECK OPTION - 제약, WHERE절에 들어간 컬럼의 변경을 금지함
+-- WITH READ ONLY - SELECT만 허용
+
+CREATE OR REPLACE VIEW VIEW_EMP AS (
+    SELECT EMPLOYEE_ID,
+           FIRST_NAME,
+           EMAIL,
+           JOB_ID,
+           DEPARTMENT_ID
+    FROM EMPLOYEES
+    WHERE DEPARTMENT_ID IN (50,60,70)
+) WITH READ ONLY; -- WITH CHECK OPTION;
+
+-- WHERE 절에 있는 DEPARTMENT_ID는 변경 불가능
+UPDATE VIEW_EMP SET DEPARTMENT_ID = 100 WHERE EMPLOYEE_ID = 103;
